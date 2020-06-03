@@ -38,7 +38,7 @@
        </property>
        <property name="icon">
         <iconset theme="go-previous" resource="../Resources/Resources.qrc">
-         <normaloff>:/icons/go-previous</normaloff>:/icons/go-previous</iconset>
+         <normaloff>:/go-previous</normaloff>:/go-previous</iconset>
        </property>
       </widget>
      </item>
@@ -62,7 +62,7 @@
        </property>
        <property name="icon">
         <iconset theme="media-playback-start" resource="../Resources/Resources.qrc">
-         <normaloff>:/icons/media-playback-start</normaloff>:/icons/media-playback-start</iconset>
+         <normaloff>:/media-playback-start</normaloff>:/media-playback-start</iconset>
        </property>
       </widget>
      </item>
@@ -155,7 +155,7 @@
             </property>
             <property name="icon">
              <iconset theme="list-add" resource="../Resources/Resources.qrc">
-              <normaloff>:/icons/list-add</normaloff>:/icons/list-add</iconset>
+              <normaloff>:/list-add</normaloff>:/list-add</iconset>
             </property>
            </widget>
           </item>
@@ -166,7 +166,7 @@
             </property>
             <property name="icon">
              <iconset theme="media-optical" resource="../Resources/Resources.qrc">
-              <normaloff>:/icons/media-optical</normaloff>:/icons/media-optical</iconset>
+              <normaloff>:/media-optical</normaloff>:/media-optical</iconset>
             </property>
            </widget>
           </item>
@@ -190,7 +190,7 @@
             </property>
             <property name="icon">
              <iconset theme="edit-delete" resource="../Resources/Resources.qrc">
-              <normaloff>:/icons/edit-delete</normaloff>:/icons/edit-delete</iconset>
+              <normaloff>:/edit-delete</normaloff>:/edit-delete</iconset>
             </property>
            </widget>
           </item>
@@ -201,7 +201,7 @@
             </property>
             <property name="icon">
              <iconset theme="document-edit" resource="../Resources/Resources.qrc">
-              <normaloff>:/icons/document-edit</normaloff>:/icons/document-edit</iconset>
+              <normaloff>:/document-edit</normaloff>:/document-edit</iconset>
             </property>
            </widget>
           </item>

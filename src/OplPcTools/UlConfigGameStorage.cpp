@@ -1,5 +1,5 @@
 /***********************************************************************************************
- * Copyright © 2017-2018 Sergey Smolyannikov aka brainstream                                   *
+ * Copyright © 2017-2019 Sergey Smolyannikov aka brainstream                                   *
  *                                                                                             *
  * This file is part of the OPL PC Tools project, the graphical PC tools for Open PS2 Loader.  *
  *                                                                                             *
@@ -17,9 +17,9 @@
  ***********************************************************************************************/
 
 #include <cstring>
-#include <QTemporaryFile>
 #include <OplPcTools/Exception.h>
 #include <OplPcTools/File.h>
+#include <OplPcTools/Settings.h>
 #include <OplPcTools/UlConfigGameStorage.h>
 
 #define MT_CD  0x12
@@ -40,7 +40,7 @@ struct RawConfigRecord
     quint8 parts;
     quint8 media;
     quint8 pad[15];
-};
+} __attribute__((packed));
 
 RawConfigRecord::RawConfigRecord(const Game & _game)
 {
@@ -106,6 +106,21 @@ quint32 crc32(const QString & _string)
     return crc;
 }
 
+bool validateGame(const Game & _game)
+{
+    if(_game.partCount() > 10) return false;
+    for(const QChar & ch : _game.id())
+        if(!ch.isPrint()) return false;
+    for(const QChar & ch : _game.title())
+        if(!ch.isPrint()) return false;
+    return true;
+}
+
+inline void throwUlCorrupted()
+{
+    throw ValidationException(QObject::tr("%1 is corrupted").arg(UL_CONFIG_FILENAME));
+}
+
 } // namespace
 
 UlConfigGameStorage::UlConfigGameStorage(QObject * _parent /*= nullptr*/) :
@@ -120,10 +135,13 @@ GameInstallationType UlConfigGameStorage::installationType() const
 
 bool UlConfigGameStorage::performLoading(const QDir & _directory)
 {
+    const Settings & settings = Settings::instance();
     m_config_filepath = _directory.absoluteFilePath(UL_CONFIG_FILENAME);
     QFile file(m_config_filepath);
     openFile(file, QIODevice::ReadWrite);
     const size_t record_size = sizeof(RawConfigRecord);
+    if(settings.flag(Settings::Flag::ValidateUlCfg) && file.size() % record_size != 0)
+        throwUlCorrupted();
     char * buffer = new char[record_size];
     for(;;)
     {
@@ -150,6 +168,8 @@ bool UlConfigGameStorage::performLoading(const QDir & _directory)
             game->setMediaType(MediaType::Unknown);
             break;
         }
+        if(settings.flag(Settings::Flag::ValidateUlCfg) && !validateGame(*game))
+            throwUlCorrupted();
     }
     delete [] buffer;
     return true;
@@ -212,9 +232,8 @@ void UlConfigGameStorage::deleteGameConfig(const QString _id)
     size_t offset = findRecordOffset(config, _id);
     if(!~offset)
         throw ValidationException(tr("Unable to locate Game \"%1\" in the config file").arg(_id));
-    QTemporaryFile temp_file;
-    temp_file.open();
-    temp_file.setAutoRemove(true);
+    QFile temp_file(m_config_filepath + ".tmp");
+    openFile(temp_file, QIODevice::WriteOnly | QIODevice::Truncate);
     if(offset > 0)
     {
         config.seek(0);
@@ -225,11 +244,10 @@ void UlConfigGameStorage::deleteGameConfig(const QString _id)
     temp_file.flush();
     config.close();
     temp_file.close();
-    QString config_bk = m_config_filepath + "_bk";
+    QString config_bk = m_config_filepath + ".bk";
     if(!QFile::rename(m_config_filepath, config_bk))
         throw IOException(QObject::tr("Unable to backup config file"));
     QFile::rename(temp_file.fileName(), config.fileName());
-    temp_file.setAutoRemove(false);
     QFile::remove(config_bk);
 }
 

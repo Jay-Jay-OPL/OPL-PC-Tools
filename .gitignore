@@ -1,8 +1,9 @@
 Makefile
 Makefile.*
-CMakeLists.txt.user
+CMakeLists.txt.user*
 .directory
 *.autosave
+*.qm
 /distr/
 /build*/
 /translations/*.qm
@@ -12,3 +13,4 @@ CMakeLists.txt.user
 /packages/*.exe
 /packages/*.msi
 /packages/*.pkg
+/release/release-*

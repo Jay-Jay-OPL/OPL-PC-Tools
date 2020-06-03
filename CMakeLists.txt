@@ -1,5 +1,5 @@
 ################################################################################################
-# Copyright © 2017-2018 Sergey Smolyannikov aka brainstream                                    #
+# Copyright © 2017-2019 Sergey Smolyannikov aka brainstream                                    #
 #                                                                                              #
 # This file is part of the OPL PC Tools project, the graphical PC tools for Open PS2 Loader.   #
 #                                                                                              #
@@ -19,20 +19,26 @@
 cmake_minimum_required(VERSION 3.2)
 project("OPL PC Tools")
 
+message("CMake version: " ${CMAKE_VERSION})
+if(CMAKE_COMPILER_IS_GNUCXX)
+    message("GNU g++ version: " ${CMAKE_CXX_COMPILER_VERSION})
+else()
+    message(FATAL_ERROR "GNU g++ is required")
+endif()
+
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(OPT_EXE_NAME "oplpctools")
 set(OPT_VERSION_MAJOR  2)
-set(OPT_VERSION_MINOR  0)
+set(OPT_VERSION_MINOR  2)
 set(OPT_SRC_DIR ${CMAKE_CURRENT_LIST_DIR}/src/OplPcTools)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
     set(CMAKE_SKIP_BUILD_RPATH ON)
 elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    message(STATUS "Application will be built in the Debug configuration")
+    message("Application will be built in the Debug configuration")
     set(CMAKE_VERBOSE_MAKEFILE ON)
 endif()
-
 
 #######################
 # Libraries
@@ -41,7 +47,7 @@ endif()
 set(QT5_DIR "" CACHE PATH "Provides a path to search Qt5 installation")
 find_package(Qt5Core HINTS ${QT5_DIR})
 if(Qt5Core_FOUND)
-    message(STATUS "Qt version: ${Qt5Core_VERSION_STRING}")
+    message("Qt version: ${Qt5Core_VERSION_STRING}")
 else()
     message(FATAL_ERROR "ERROR: Qt not found. Please specify a path to Qt installation using the QT5_DIR variable.")
 endif()
@@ -59,6 +65,7 @@ include_directories(
 )
 
 set(OPT_SRC_MOC
+    ${OPT_SRC_DIR}/UI/Application.h
     ${OPT_SRC_DIR}/GameArtManager.h
     ${OPT_SRC_DIR}/GameCollection.h
     ${OPT_SRC_DIR}/IsoRestorer.h
@@ -110,10 +117,13 @@ set(OPT_SRC
     ${OPT_SRC_DIR}/Exception.h
     ${OPT_SRC_DIR}/File.h
     ${OPT_SRC_DIR}/Maybe.h
+    ${OPT_SRC_DIR}/BigEndian.h
     ${OPT_SRC_DIR}/DeviceSource.h
     ${OPT_SRC_DIR}/Iso9660DeviceSource.h
     ${OPT_SRC_DIR}/BinCueDeviceSource.h
     ${OPT_SRC_DIR}/BinCueDeviceSource.cpp
+    ${OPT_SRC_DIR}/NrgDeviceSource.h
+    ${OPT_SRC_DIR}/NrgDeviceSource.cpp
     ${OPT_SRC_DIR}/OpticalDriveDeviceSource.h
     ${OPT_SRC_DIR}/OpticalDriveDeviceSource.cpp
     ${OPT_SRC_DIR}/Device.h
@@ -137,7 +147,6 @@ set(OPT_SRC
     ${OPT_SRC_DIR}/DirectoryGameInstaller.cpp
     ${OPT_SRC_DIR}/Updater.cpp
     ${OPT_SRC_DIR}/UlConfigGameInstaller.cpp
-    ${OPT_SRC_DIR}/UI/Application.h
     ${OPT_SRC_DIR}/UI/Application.cpp
     ${OPT_SRC_DIR}/UI/Intent.h
     ${OPT_SRC_DIR}/UI/Activity.h
@@ -168,6 +177,7 @@ set(TRANSLATIONS
 qt5_create_translation(QM_FILES
     ${OPT_SRC}
     ${TRANSLATIONS}
+    OPTIONS "-no-obsolete"
 )
 
 #######################
@@ -179,6 +189,9 @@ add_definitions(
     -D_OPLPCTOOLS_VERSION_MAJOR=${OPT_VERSION_MAJOR}
     -D_OPLPCTOOLS_VERSION_MINOR=${OPT_VERSION_MINOR}
     -D_OPLPCTOOLS_EXE=${OPT_EXE_NAME}
+    ${Qt5Core_DEFINITIONS}
+    ${Qt5Widgets_DEFINITIONS}
+    ${Qt5Network_DEFINITIONS}
 )
 
 
@@ -203,5 +216,7 @@ add_custom_target(misc SOURCES
     .gitignore
     LICENSE.txt
     README.md
+    NOTES.txt
+    release/make-release-linux.sh
 )
 

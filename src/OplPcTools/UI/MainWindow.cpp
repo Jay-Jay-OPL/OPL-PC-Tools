@@ -1,5 +1,5 @@
 /***********************************************************************************************
- * Copyright © 2017-2018 Sergey Smolyannikov aka brainstream                                   *
+ * Copyright © 2017-2019 Sergey Smolyannikov aka brainstream                                   *
  *                                                                                             *
  * This file is part of the OPL PC Tools project, the graphical PC tools for Open PS2 Loader.  *
  *                                                                                             *
@@ -52,7 +52,7 @@ MainWindow::MainWindow(QWidget * _parent /*= nullptr*/) :
 void MainWindow::setupUpdater()
 {
     mp_widget_update->setVisible(false);
-    if(!Settings::instance().checkNewVersion())
+    if(!Settings::instance().flag(Settings::Flag::CheckNewVersion))
         return;
     Updater * updater = new Updater(this);
     connect(updater, &Updater::updateAvailable, [this, updater]() {

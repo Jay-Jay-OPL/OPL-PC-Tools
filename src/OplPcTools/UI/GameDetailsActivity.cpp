@@ -1,5 +1,5 @@
 /***********************************************************************************************
- * Copyright © 2017-2018 Sergey Smolyannikov aka brainstream                                   *
+ * Copyright © 2017-2019 Sergey Smolyannikov aka brainstream                                   *
  *                                                                                             *
  * This file is part of the OPL PC Tools project, the graphical PC tools for Open PS2 Loader.  *
  *                                                                                             *
@@ -241,7 +241,7 @@ void GameDetailsActivity::deleteGameArt()
         ArtListItem * item = static_cast<ArtListItem *>(mp_list_arts->currentItem());
         if(item == nullptr || !item->hasPixmap()) return;
         Settings & settings = Settings::instance();
-        if(settings.confirmPixmapDeletion())
+        if(settings.flag(Settings::Flag::ConfirmPixmapDeletion))
         {
             QCheckBox * checkbox = new QCheckBox(tr("Don't show again"));
             QMessageBox message_box(QMessageBox::Question, tr("Remove Picture"),
@@ -252,7 +252,7 @@ void GameDetailsActivity::deleteGameArt()
             if(message_box.exec() != QMessageBox::Yes)
                 return;
             if(checkbox->isChecked())
-                settings.setConfirmPixmapDeletion(false);
+                settings.setFlag(Settings::Flag::ConfirmPixmapDeletion, false);
         }
         mr_art_manager.deleteArt(mp_game->id(), item->type());
         item->setPixmap(QPixmap());

@@ -1,5 +1,5 @@
 /***********************************************************************************************
- * Copyright © 2017-2018 Sergey Smolyannikov aka brainstream                                   *
+ * Copyright © 2017-2019 Sergey Smolyannikov aka brainstream                                   *
  *                                                                                             *
  * This file is part of the OPL PC Tools project, the graphical PC tools for Open PS2 Loader.  *
  *                                                                                             *
@@ -136,7 +136,7 @@ void ReleaseParser::parse(const QByteArray & _json)
 
 Maybe<Version> ReleaseParser::parseVersionTag(const QString & _tag_name) const
 {
-    QRegExp regex("v(\\d+)\\.(\\d+)");
+    QRegExp regex("(\\d+)\\.(\\d+)");
     if(!regex.exactMatch(_tag_name))
         return nullptr;
     bool parsed = false;

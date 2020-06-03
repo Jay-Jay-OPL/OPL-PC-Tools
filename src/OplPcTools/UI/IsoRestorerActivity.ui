@@ -41,7 +41,7 @@
        </property>
        <property name="icon">
         <iconset theme="go-previous" resource="../Resources/Resources.qrc">
-         <normaloff>:/icons/go-previous</normaloff>:/icons/go-previous</iconset>
+         <normaloff>:/go-previous</normaloff>:/go-previous</iconset>
        </property>
       </widget>
      </item>

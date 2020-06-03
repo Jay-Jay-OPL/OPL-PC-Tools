@@ -1,5 +1,5 @@
 /***********************************************************************************************
- * Copyright © 2017-2018 Sergey Smolyannikov aka brainstream                                   *
+ * Copyright © 2017-2019 Sergey Smolyannikov aka brainstream                                   *
  *                                                                                             *
  * This file is part of the OPL PC Tools project, the graphical PC tools for Open PS2 Loader.  *
  *                                                                                             *
@@ -30,13 +30,15 @@ namespace UI {
 
 class Application : public QApplication
 {
+    Q_OBJECT
+
 protected:
     Application(int & _argc, char ** _argv);
 
 public:
     ~Application() override;
     void showMainWindow();
-    void showMessage(const QString & _message);
+    void showMessage(const QString & _title, const QString & _message);
     void showErrorMessage();
     void showErrorMessage(const QString & _message);
     bool pushActivity(Intent & _intent);

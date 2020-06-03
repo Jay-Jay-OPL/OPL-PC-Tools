@@ -1,5 +1,5 @@
 /***********************************************************************************************
- * Copyright © 2017-2018 Sergey Smolyannikov aka brainstream                                   *
+ * Copyright © 2017-2019 Sergey Smolyannikov aka brainstream                                   *
  *                                                                                             *
  * This file is part of the OPL PC Tools project, the graphical PC tools for Open PS2 Loader.  *
  *                                                                                             *
@@ -27,116 +27,38 @@ namespace OplPcTools {
 
 class Settings final
 {
-private:
-    struct Key
-    {
-        static const QString reopen_last_session;
-        static const QString confirm_game_deletion;
-        static const QString confirm_pixmap_deletion;
-        static const QString split_up_iso;
-        static const QString move_iso;
-        static const QString rename_iso;
-        static const QString check_new_version;
-    };
+    Q_DISABLE_COPY(Settings)
 
-private:
-    Settings();
-    Settings(const Settings &) = delete;
-    Settings & operator = (const Settings &) = delete;
+public:
+    enum class Flag
+    {
+        ReopenLastSession,
+        ConfirmGameDeletion,
+        ConfirmPixmapDeletion,
+        SplitUpIso,
+        MoveIso,
+        RenameIso,
+        CheckNewVersion,
+        ValidateUlCfg
+    };
 
 public:
     static Settings & instance();
-
-    bool reopenLastSestion() const
-    {
-        return m_reopen_last_session;
-    }
-
-    void setReopenLastSestion(bool _value)
-    {
-        setProperyValue(Key::reopen_last_session, &m_reopen_last_session, _value);
-    }
-
-    bool confirmGameDeletion() const
-    {
-        return m_confirm_game_deletion;
-    }
-
-    void setConfirmGameDeletion(bool _value)
-    {
-        setProperyValue(Key::confirm_game_deletion, &m_confirm_game_deletion, _value);
-    }
-
-    bool confirmPixmapDeletion() const
-    {
-        return m_confirm_pixmap_deletion;
-    }
-
-    void setConfirmPixmapDeletion(bool _value)
-    {
-        setProperyValue(Key::confirm_pixmap_deletion, &m_confirm_pixmap_deletion, _value);
-    }
-
-    bool splitUpIso() const
-    {
-        return m_split_up_iso;
-    }
-
-    void setSplitUpIso(bool _value)
-    {
-        setProperyValue(Key::split_up_iso, &m_split_up_iso, _value);
-    }
-
-    bool moveIso() const
-    {
-        return m_move_iso;
-    }
-
-    void setMoveIso(bool _value)
-    {
-        setProperyValue(Key::move_iso, &m_move_iso, _value);
-    }
-
-    bool renameIso() const
-    {
-        return m_rename_iso;
-    }
-
-    void setRenameIso(bool _value)
-    {
-        setProperyValue(Key::rename_iso, &m_rename_iso, _value);
-    }
-
-    bool checkNewVersion() const
-    {
-        return m_check_new_version;
-    }
-
-    void setCheckNewVersion(bool _value)
-    {
-        setProperyValue(Key::check_new_version, &m_check_new_version, _value);
-    }
+    inline bool flag(Flag _flag) const;
+    void setFlag(Flag _flag, bool _value);
 
 private:
-    bool loadBoolean(const QString & _key, bool _default_value);
-
-    template<typename ProperyType>
-    void setProperyValue(const QString & _key, ProperyType * _propery, const ProperyType & _value)
-    {
-        m_settins.setValue(_key, _value);
-        *_propery = _value;
-    }
+    Settings();
+    void loadFlag(const QSettings & _settings, Flag _flag, bool _default_value);
 
 private:
-    QSettings m_settins;
-    bool m_reopen_last_session;
-    bool m_confirm_game_deletion;
-    bool m_confirm_pixmap_deletion;
-    bool m_split_up_iso;
-    bool m_move_iso;
-    bool m_rename_iso;
-    bool m_check_new_version;
+    QMap<Flag, bool> m_flags;
 };
+
+bool Settings::flag(Flag _flag) const
+{
+    return m_flags[_flag];
+}
 
 } // namespace OplPcTools
 

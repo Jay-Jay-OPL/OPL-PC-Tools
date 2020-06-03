@@ -1,5 +1,5 @@
 /***********************************************************************************************
- * Copyright © 2017-2018 Sergey Smolyannikov aka brainstream                                   *
+ * Copyright © 2017-2019 Sergey Smolyannikov aka brainstream                                   *
  *                                                                                             *
  * This file is part of the OPL PC Tools project, the graphical PC tools for Open PS2 Loader.  *
  *                                                                                             *
@@ -28,28 +28,31 @@ SettingsDialog::SettingsDialog(QWidget * _parent /*= nullptr*/) :
 {
     setupUi(this);
     Settings & settings = Settings::instance();
-    mp_checkbx_reopen_last_catalog->setChecked(settings.reopenLastSestion());
-    mp_checkbox_confirm_game_deletion->setChecked(settings.confirmGameDeletion());
-    mp_checkbox_confirm_picture_deletion->setChecked(settings.confirmPixmapDeletion());
-    mp_groupbox_donot_splitup->setChecked(!settings.splitUpIso());
-    mp_checkbox_add_id->setChecked(settings.renameIso());
-    mp_checkobx_move_iso->setChecked(settings.moveIso());
+    mp_checkbx_reopen_last_catalog->setChecked(settings.flag(Settings::Flag::ReopenLastSession));
+    mp_checkbox_confirm_game_deletion->setChecked(settings.flag(Settings::Flag::ConfirmGameDeletion));
+    mp_checkbox_confirm_picture_deletion->setChecked(settings.flag(Settings::Flag::ConfirmPixmapDeletion));
+    mp_checkbox_donot_splitup->setChecked(!settings.flag(Settings::Flag::SplitUpIso));
+    mp_checkbox_add_id->setChecked(settings.flag(Settings::Flag::RenameIso));
+    mp_checkobx_move_iso->setChecked(settings.flag(Settings::Flag::MoveIso));
+    mp_checkbox_validate_ulcfg->setChecked(settings.flag(Settings::Flag::ValidateUlCfg));
     if(Updater::isSupported())
-        mp_checkbox_check_new_versions->setChecked(settings.checkNewVersion());
+        mp_checkbox_check_new_versions->setChecked(settings.flag(Settings::Flag::CheckNewVersion));
     else
         mp_checkbox_check_new_versions->setEnabled(false);
+    mp_tabs->setCurrentIndex(0);
 }
 
 void SettingsDialog::accept()
 {
     Settings & settings = Settings::instance();
-    settings.setReopenLastSestion(mp_checkbx_reopen_last_catalog->isChecked());
-    settings.setConfirmGameDeletion(mp_checkbox_confirm_game_deletion->isChecked());
-    settings.setConfirmPixmapDeletion(mp_checkbox_confirm_picture_deletion->isChecked());
-    settings.setSplitUpIso(!mp_groupbox_donot_splitup->isChecked());
-    settings.setRenameIso(mp_checkbox_add_id->isChecked());
-    settings.setMoveIso(mp_checkobx_move_iso->isChecked());
-    if(mp_checkbox_check_new_versions->isEnabled())
-        settings.setCheckNewVersion(mp_checkbox_check_new_versions->isChecked());
+    settings.setFlag(Settings::Flag::ReopenLastSession, mp_checkbx_reopen_last_catalog->isChecked());
+    settings.setFlag(Settings::Flag::ConfirmGameDeletion, mp_checkbox_confirm_game_deletion->isChecked());
+    settings.setFlag(Settings::Flag::ConfirmPixmapDeletion, mp_checkbox_confirm_picture_deletion->isChecked());
+    settings.setFlag(Settings::Flag::SplitUpIso, !mp_checkbox_donot_splitup->isChecked());
+    settings.setFlag(Settings::Flag::RenameIso, mp_checkbox_add_id->isChecked());
+    settings.setFlag(Settings::Flag::MoveIso, mp_checkobx_move_iso->isChecked());
+    settings.setFlag(Settings::Flag::ValidateUlCfg, mp_checkbox_validate_ulcfg->isChecked());
+    settings.setFlag(Settings::Flag::CheckNewVersion,
+        mp_checkbox_check_new_versions->isEnabled() && mp_checkbox_check_new_versions->isChecked());
     QDialog::accept();
 }

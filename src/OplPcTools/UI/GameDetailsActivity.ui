@@ -41,7 +41,7 @@
        </property>
        <property name="icon">
         <iconset theme="go-previous" resource="../Resources/Resources.qrc">
-         <normaloff>:/icons/go-previous</normaloff>:/icons/go-previous</iconset>
+         <normaloff>:/go-previous</normaloff>:/go-previous</iconset>
        </property>
       </widget>
      </item>
@@ -90,7 +90,7 @@
        </property>
        <property name="icon">
         <iconset theme="document-edit" resource="../Resources/Resources.qrc">
-         <normaloff>:/icons/document-edit</normaloff>:/icons/document-edit</iconset>
+         <normaloff>:/document-edit</normaloff>:/document-edit</iconset>
        </property>
       </widget>
      </item>
@@ -127,7 +127,7 @@
   </layout>
   <action name="mp_action_change_art">
    <property name="icon">
-    <iconset theme="document-edit" resource="../Resources/Resources.qrc">
+    <iconset>
      <normaloff>:/icons/document-edit</normaloff>:/icons/document-edit</iconset>
    </property>
    <property name="text">
@@ -136,7 +136,7 @@
   </action>
   <action name="mp_action_delete_art">
    <property name="icon">
-    <iconset theme="edit-delete" resource="../Resources/Resources.qrc">
+    <iconset>
      <normaloff>:/icons/edit-delete</normaloff>:/icons/edit-delete</iconset>
    </property>
    <property name="text">
